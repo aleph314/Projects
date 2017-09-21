@@ -34,11 +34,12 @@ def movies_by_actor(movies, actors):
     present in the dataset, the movies gross revenue, budget and ROI and
     the actor's importance in the movie (1st, 2nd or 3rd actor) and facebook likes.
     """
-    movies_by_actor = pd.melt(movies[['movie_title', 'actor_1_name', 'actor_2_name', 'actor_3_name', 'gross', 'budget', 'ROI', 'log_ROI']],
-                            id_vars=['movie_title', 'gross', 'budget', 'ROI', 'log_ROI'],
+    movies_by_actor = pd.melt(movies[['movie_title', 'actor_1_name', 'actor_2_name', 'actor_3_name', 'worldwide_gross', 'production_budget', 'worldwide_ROI']],
+                            id_vars=['movie_title', 'worldwide_gross', 'production_budget', 'worldwide_ROI'],
                             value_vars=['actor_1_name', 'actor_2_name', 'actor_3_name'],
                             var_name='actor_importance', value_name='actor')
     movies_by_actor.actor_importance = movies_by_actor.actor_importance.map({'actor_1_name':1, 'actor_2_name':2, 'actor_3_name':3})
+    # movies_by_actor['weighted_ROI'] = (4 - movies_by_actor.actor_importance) * movies_by_actor.worldwide / 3
     movies_by_actor = movies_by_actor.merge(actors, left_on='actor', right_index=True, how='inner')
     return movies_by_actor
 
@@ -46,14 +47,13 @@ def actors_ROI(movies_by_actor):
     """Returns a dataframe containing actors' total gross revenue, budget and ROI
     calculated from all the movies in which they acted.
     It also includes the actor's facebook likes and number of movies.
-    It doesn't take into account the actors' importance in the movie.
     """
     actors_ROI = movies_by_actor.groupby('actor').apply(
         lambda x: pd.Series({
-                    'ROI': (x.gross.sum() - x.budget.sum()) / (x.budget.sum()) if x.budget.sum() != 0 else np.NaN,
+                    'ROI': (x.worldwide_gross.sum() - x.production_budget.sum()) / (x.production_budget.sum()) if x.production_budget.sum() != 0 else np.NaN,
                     'facebook_likes': x.facebook_likes.max(),
-                    'total_gross': x.gross.sum(),
-                    'total_budget': x.budget.sum(),
+                    'total_gross': x.worldwide_gross.sum(),
+                    'total_budget': x.production_budget.sum(),
                     'number_movies': len(x)
                 })
         ).dropna()
@@ -66,6 +66,18 @@ def movies_by_genre(movies):
     """
     movies_by_genre = pd.melt(movies[['movie_title', 'title_year', 'Biography', 'Adventure', 'Family', 'War', 'Sci-Fi', 'Mystery', 'Romance', 'Crime', 'Action', 'Animation', 'Sport', 'Drama', 'Documentary', 'Music', 'History', 'Fantasy', 'Film-Noir', 'Thriller', 'Horror', 'Short', 'Comedy', 'Western', 'News', 'Musical', 'gross', 'budget', 'ROI', 'log_ROI']],
                         id_vars=['movie_title', 'title_year', 'gross', 'budget', 'ROI', 'log_ROI'],
+                        value_vars=['Biography', 'Adventure', 'Family', 'War', 'Sci-Fi', 'Mystery', 'Romance', 'Crime', 'Action', 'Animation', 'Sport', 'Drama', 'Documentary', 'Music', 'History', 'Fantasy', 'Film-Noir', 'Thriller', 'Horror', 'Short', 'Comedy', 'Western', 'News', 'Musical'],
+                        var_name='genre', value_name='flag')
+    movies_by_genre = movies_by_genre[movies_by_genre.flag==1].drop('flag', axis=1)
+    return movies_by_genre
+
+def movies_by_genre_worldwide(movies):
+    """Returns a dataframe containing all the combination of genres and movies
+    present in the dataset, the movies gross revenue, budget and ROI.
+    It uses the worldwide ROI and production budget.
+    """
+    movies_by_genre = pd.melt(movies[['movie_title', 'release_year', 'Biography', 'Adventure', 'Family', 'War', 'Sci-Fi', 'Mystery', 'Romance', 'Crime', 'Action', 'Animation', 'Sport', 'Drama', 'Documentary', 'Music', 'History', 'Fantasy', 'Film-Noir', 'Thriller', 'Horror', 'Short', 'Comedy', 'Western', 'News', 'Musical', 'worldwide_gross', 'production_budget', 'worldwide_ROI']],
+                        id_vars=['movie_title', 'release_year', 'worldwide_gross', 'production_budget', 'worldwide_ROI'],
                         value_vars=['Biography', 'Adventure', 'Family', 'War', 'Sci-Fi', 'Mystery', 'Romance', 'Crime', 'Action', 'Animation', 'Sport', 'Drama', 'Documentary', 'Music', 'History', 'Fantasy', 'Film-Noir', 'Thriller', 'Horror', 'Short', 'Comedy', 'Western', 'News', 'Musical'],
                         var_name='genre', value_name='flag')
     movies_by_genre = movies_by_genre[movies_by_genre.flag==1].drop('flag', axis=1)
@@ -85,6 +97,21 @@ def genres_ROI(movies_by_genre):
         ).dropna()
     return genres_ROI
 
+def genres_ROI_worldwide(movies_by_genre):
+    """Returns a dataframe containing genres' total gross revenue, budget and ROI
+    calculated from all the movies for the genre applies.
+    It uses the worldwide ROI and production budget.
+    """
+    genres_ROI = movies_by_genre.groupby('genre').apply(
+        lambda x: pd.Series({
+                    'ROI': (x.worldwide_gross.sum() - x.production_budget.sum()) / (x.production_budget.sum()) if x.production_budget.sum() != 0 else np.NaN,
+                    'total_gross': x.worldwide_gross.sum(),
+                    'total_budget': x.production_budget.sum(),
+                    'number_movies': len(x)
+                })
+        ).dropna()
+    return genres_ROI
+
 def top_movies_by_genre(movies_by_genre, genre, minimum_ROI, n):
     return movies_by_genre[(movies_by_genre.genre==genre) & (movies_by_genre.ROI>=minimum_ROI)].sort_values(by='ROI', ascending=False).head(n)
 
@@ -94,7 +121,7 @@ def movies_by_director(movies, directors):
     present in the dataset, the movies gross revenue, budget and ROI and
     the director's facebook likes.
     """
-    movies_by_director = movies[['movie_title', 'director_name', 'gross', 'budget', 'ROI', 'log_ROI']]
+    movies_by_director = movies[['movie_title', 'director_name', 'worldwide_gross', 'production_budget', 'worldwide_ROI']]
     movies_by_director = movies_by_director.merge(directors, left_on='director_name', right_index=True, how='inner')
     return movies_by_director
 
@@ -105,10 +132,10 @@ def directors_ROI(movies_by_director):
     """
     directors_ROI = movies_by_director.groupby('director_name').apply(
         lambda x: pd.Series({
-                    'ROI': (x.gross.sum() - x.budget.sum()) / (x.budget.sum()) if x.budget.sum() != 0 else np.NaN,
+                    'ROI': (x.worldwide_gross.sum() - x.production_budget.sum()) / (x.production_budget.sum()) if x.production_budget.sum() != 0 else np.NaN,
                     'facebook_likes': x.facebook_likes.max(),
-                    'total_gross': x.gross.sum(),
-                    'total_budget': x.budget.sum(),
+                    'total_gross': x.worldwide_gross.sum(),
+                    'total_budget': x.production_budget.sum(),
                     'number_movies': len(x)
                 })
         ).dropna()
@@ -116,17 +143,17 @@ def directors_ROI(movies_by_director):
 
 # analysis by year and genre
 def genre_year(movies_by_genre, genre_list):
-    genre_year = movies_by_genre[movies_by_genre.genre.isin(genre_list)].groupby(['genre', 'title_year']).apply(
+    genre_year = movies_by_genre[movies_by_genre.genre.isin(genre_list)].groupby(['genre', 'release_year']).apply(
     lambda x: pd.Series({
-                'ROI': (x.gross.sum() - x.budget.sum()) / (x.budget.sum()) if x.budget.sum() != 0 else np.NaN,
-                'total_gross': x.gross.sum(),
-                'total_budget': x.budget.sum(),
+                'ROI': (x.worldwide_gross.sum() - x.production_budget.sum()) / (x.production_budget.sum()) if x.production_budget.sum() != 0 else np.NaN,
+                'total_gross': x.worldwide_gross.sum(),
+                'total_budget': x.production_budget.sum(),
                 'number_movies': len(x)
             })).reset_index()
     return genre_year
 
 def genre_year_plotting(movies_by_genre, genre_list, year_from=1980):
-    df = pd.pivot_table(genre_year(movies_by_genre, genre_list), values=['number_movies', 'ROI'], index='title_year', columns='genre', aggfunc='sum')
+    df = pd.pivot_table(genre_year(movies_by_genre, genre_list), values=['number_movies', 'ROI'], index='release_year', columns='genre', aggfunc='sum')
     secondary_y = []
     for el in genre_list:
         secondary_y.append(('ROI', el))
