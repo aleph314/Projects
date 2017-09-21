@@ -44,7 +44,7 @@ We knew a priori that we would have to account for some discrepancies in the amo
 1. Imprecise budgets: by looking at some movies on IMDB we found out that the budget amount differed from the one reported in the dataset.
 2. Local revenues: the dataset accounted only for local and not worldwide revenues, changing quite a bit the success of certain movies.
 
-Thus, we scraped [this site](http://www.the-numbers.com/movie/budgets/all/1) for more precise numbers and adjusted them to 2016 dollars in order to distinguish between the type of budgets of a movie through different years.
+Thus, we scraped [this site](http://www.the-numbers.com/movie/budgets/all/1) for more precise numbers and adjusted them to 2016 dollars in order to distinguish between the type of budgets of a movie throughout different years.
 
 After this, we took a look at the top non micro- or low-budget movies by worldwide ROI
 
@@ -62,9 +62,9 @@ finding, not surprisingly, that movies released in the holidays tend to have bet
 
 In order to answer our initial questions we added this new data to the initial dataset.
 
-We had some duplicate names in the scraped data, so we had to compare the release year and the production year to join the two datasets. We also had to manually match a few hundred of movies that were spelled differently or in different languages.
+We had some duplicate names in the scraped data, so we had to compare the release year and the production year to join the two datasets. We also had to manually match a few hundred movies that were spelled differently or in different languages.
 
-Finally, we binned also the IMDB ratings and the worldwide ROI in a manner similar to the one described above and performed chi-square tests to investigate the relations between the (binned) movie financial success and
+Finally, we binned also the IMDB ratings and the worldwide ROI in a manner similar to the one described above and performed chi-square tests to investigate the relations between the (binned) movies' financial success and
 
 - Actors' financial success (binned)
 - Directors' financial success (binned)
@@ -73,20 +73,20 @@ Finally, we binned also the IMDB ratings and the worldwide ROI in a manner simil
 
 finding very low p-values that suggested that all of the above are related.
 
-In particular, we found that using this analysis method ratings and movies' success are related, in contrast with what we found out using non-binned ratings and ROI.
+In particular, we found out that using this analysis method ratings and movies' success are related, in contrast with what we found out using non-binned ratings and ROI.
 
 ![Heatmap](figures/heatmap.png)
 
 ## Lessons Learned
 
-In contrast with my first impression of ratings not being related to financial success, using a different approach I found out that there is a relation between them: the lesson learned here is that it is worth diving deeper into an analysis and trying different approaches before drawing any conclusion.
+In contrast with our first impression of ratings not being related to financial success, using a different approach we found out that there is a relation between them: the lesson learned here is that it is worth diving deeper into an analysis and trying different approaches before drawing any conclusion.
 
 ## Further Analysis
 
 What we would have done further if we had more time and data:
 
 1. Add some data about actors and directors, such as sex and age or their medium pay.
-2. Add data about the movies' DVD release dates, initial week revenues and more.
+2. Add data about the movies' DVD release dates, first week revenues and more.
 3. Analyze ratings from other websites.
 4. Analyze the effectiveness of combination of genres in relation to the financial success of a movie.
 5. Determine if the analysis of the binned quantities is more precise than the one performed in the preliminary EDA.
