@@ -50,7 +50,8 @@ def actors_ROI(movies_by_actor):
     """
     actors_ROI = movies_by_actor.groupby('actor').apply(
         lambda x: pd.Series({
-                    'ROI': (x.worldwide_gross.sum() - x.production_budget.sum()) / (x.production_budget.sum()) if x.production_budget.sum() != 0 else np.NaN,
+                    # 'ROI': (x.worldwide_gross.sum() - x.production_budget.sum()) / (x.production_budget.sum()) if x.production_budget.sum() != 0 else np.NaN,
+                    'ROI': x.worldwide_ROI.median(),
                     'facebook_likes': x.facebook_likes.max(),
                     'total_gross': x.worldwide_gross.sum(),
                     'total_budget': x.production_budget.sum(),
@@ -89,7 +90,8 @@ def genres_ROI(movies_by_genre):
     """
     genres_ROI = movies_by_genre.groupby('genre').apply(
         lambda x: pd.Series({
-                    'ROI': (x.gross.sum() - x.budget.sum()) / (x.budget.sum()) if x.budget.sum() != 0 else np.NaN,
+                    # 'ROI': (x.gross.sum() - x.budget.sum()) / (x.budget.sum()) if x.budget.sum() != 0 else np.NaN,
+                    'ROI': x.ROI.median(),
                     'total_gross': x.gross.sum(),
                     'total_budget': x.budget.sum(),
                     'number_movies': len(x)
@@ -104,7 +106,8 @@ def genres_ROI_worldwide(movies_by_genre):
     """
     genres_ROI = movies_by_genre.groupby('genre').apply(
         lambda x: pd.Series({
-                    'ROI': (x.worldwide_gross.sum() - x.production_budget.sum()) / (x.production_budget.sum()) if x.production_budget.sum() != 0 else np.NaN,
+                    # 'ROI': (x.worldwide_gross.sum() - x.production_budget.sum()) / (x.production_budget.sum()) if x.production_budget.sum() != 0 else np.NaN,
+                    'ROI': x.worldwide_ROI.median(),
                     'total_gross': x.worldwide_gross.sum(),
                     'total_budget': x.production_budget.sum(),
                     'number_movies': len(x)
@@ -132,7 +135,8 @@ def directors_ROI(movies_by_director):
     """
     directors_ROI = movies_by_director.groupby('director_name').apply(
         lambda x: pd.Series({
-                    'ROI': (x.worldwide_gross.sum() - x.production_budget.sum()) / (x.production_budget.sum()) if x.production_budget.sum() != 0 else np.NaN,
+                    # 'ROI': (x.worldwide_gross.sum() - x.production_budget.sum()) / (x.production_budget.sum()) if x.production_budget.sum() != 0 else np.NaN,
+                    'ROI': x.worldwide_ROI.median(),
                     'facebook_likes': x.facebook_likes.max(),
                     'total_gross': x.worldwide_gross.sum(),
                     'total_budget': x.production_budget.sum(),
@@ -145,7 +149,8 @@ def directors_ROI(movies_by_director):
 def genre_year(movies_by_genre, genre_list):
     genre_year = movies_by_genre[movies_by_genre.genre.isin(genre_list)].groupby(['genre', 'release_year']).apply(
     lambda x: pd.Series({
-                'ROI': (x.worldwide_gross.sum() - x.production_budget.sum()) / (x.production_budget.sum()) if x.production_budget.sum() != 0 else np.NaN,
+                # 'ROI': (x.worldwide_gross.sum() - x.production_budget.sum()) / (x.production_budget.sum()) if x.production_budget.sum() != 0 else np.NaN,
+                'ROI': x.worldwide_ROI.median(),
                 'total_gross': x.worldwide_gross.sum(),
                 'total_budget': x.production_budget.sum(),
                 'number_movies': len(x)

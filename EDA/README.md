@@ -19,11 +19,11 @@ We used the [ROI](https://en.wikipedia.org/wiki/Return_on_investment), calculate
 
 We used the same measure to evaluate the success of a single actor or director across all the movies s/he took part and found out who the best actors
 
-![Best Actors](figures/top_actors.png)
+![Best Actors](figures/top_actors_2.png)
 
 and directors
 
-![Best Directors](figures/top_directors.png)
+![Best Directors](figures/top_directors_2.png)
 
 by ROI are.
 
@@ -48,11 +48,11 @@ Thus, we scraped [this site](http://www.the-numbers.com/movie/budgets/all/1) for
 
 After this, we took a look at the top non micro- or low-budget movies by worldwide ROI
 
-![Top Movies worldwide](figures/top_normal_movies_worldwide.png)
+![Top Movies worldwide](figures/top_normal_movies_worldwide_2.png)
 
 and plotted some time series to search for seasonality in the data
 
-![ROI Seasonality](figures/ROI_seasonality.png)
+![ROI Seasonality](figures/ROI_seasonality_2.png)
 
 finding, not surprisingly, that movies released in the holidays tend to have better performances.
 
@@ -75,7 +75,7 @@ finding very low p-values that suggested that all of the above are related.
 
 In particular, we found out that using this analysis method ratings and movies' success are related, in contrast with what we found out using non-binned ratings and ROI.
 
-![Heatmap](figures/heatmap.png)
+![Heatmap](figures/heatmap_2.png)
 
 ## Lessons Learned
 
