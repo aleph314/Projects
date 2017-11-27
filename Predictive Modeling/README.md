@@ -104,7 +104,7 @@ I have seen that discarding variables in order to get more data isn't useful, pr
 
 I have also concluded that trying to predict the PUN for each hour separately produces worst results than training on all the data at once.
 
-![learning_curves](reports/figures/.png)
+![learning_curves](reports/figures/learning_curves.png)
 
 ## Further Analysis
 
