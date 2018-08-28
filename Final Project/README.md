@@ -98,4 +98,16 @@ In both cases there are some differences between the distributions, but they don
 
 ## Conclusions
 
-Advise something to company... the thing about twitching premiums?
+In this project I analyzed daily mileages for over 600,000 car insurance annualities using NLP techniques, apriori and clustering.
+
+The goal of this analisys was to identify "better" and "worst" groups of clients for the insurance company; to do so I used a measure called COR which is the ratio between the claims' cost and the premiums paid and I found out some promising clusters with respect to it: the data is suggesting that the clustering is adding some value with respect to simpler ways of assessing the risk for a client, such as using the total mileage of the insurance annuality.
+
+As a last really inaccurate experiment I tried to estimate how much the company might gain by varying the premium for some of the clusters with a higher COR: for example a 5% increase for clusters 5 and 7 gives an improvement of 0.002, which in turns corresponds to 750,000€. As i said this is far from precise but gives an idea of the value the clustering might have for the company.
+
+## Further Analysis
+
+If I had more time I would have tried:
+
+- try to find anomalous annualities and/or analyze the annualities that are in a bad cluster but have no claims and, viceversa, the annualities in good clusters that have a claim
+- further analyze the daily mileages and try to predict the probability of having a car accident
+- do the premium increase experiment more rigourously, for example using Monte Carlo simulations
